@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>扫描追踪 - LogiFlow</title>
+    <meta name="description" content="使用摄像头或手动输入扫描包裹追踪码">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="scan-styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Header (same as index.html) -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo" onclick="navigateTo('index.html')">
+                    <div class="logo-icon">🚚</div>
+                    <span class="logo-text">LogiFlow</span>
+                </div>
+                
+                <div class="header-right">
+                    <div class="dropdown">
+                        <button class="lang-btn" onclick="toggleDropdown('langDropdown')">
+                            <i class="fas fa-globe"></i>
+                            <span id="currentFlag">🇨🇳</span>
+                        </button>
+                        <div class="dropdown-content" id="langDropdown">
+                            <a href="#" onclick="changeLanguage('zh-CN')">🇨🇳 中文</a>
+                            <a href="#" onclick="changeLanguage('en-US')">🇺🇸 English</a>
+                            <a href="#" onclick="changeLanguage('ru-RU')">🇷🇺 Русский</a>
+                            <a href="#" onclick="changeLanguage('kk-KZ')">🇰🇿 Қазақша</a>
+                        </div>
+                    </div>
+                    
+                    <div class="dropdown">
+                        <button class="profile-btn" onclick="toggleDropdown('profileDropdown')">
+                            <div class="avatar">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <span class="username">张伟</span>
+                        </button>
+                        <div class="dropdown-content" id="profileDropdown">
+                            <a href="#" data-translate="profile">个人资料</a>
+                            <a href="#" data-translate="settings">设置</a>
+                            <a href="#" data-translate="logout">退出登录</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="scan-main">
+        <div class="container">
+            <div class="scan-header">
+                <button class="back-btn" onclick="navigateTo('index.html')">
+                    <i class="fas fa-arrow-left"></i>
+                    <span data-translate="common.back">返回</span>
+                </button>
+                <h1 data-translate="scan.title">扫描追踪码</h1>
+            </div>
+
+            <div class="scan-container">
+                <!-- Scanner Section -->
+                <div class="scanner-section">
+                    <div class="scanner-box" id="scannerBox">
+                        <div class="scanner-overlay">
+                            <div class="scan-frame">
+                                <div class="scan-corners">
+                                    <div class="corner top-left"></div>
+                                    <div class="corner top-right"></div>
+                                    <div class="corner bottom-left"></div>
+                                    <div class="corner bottom-right"></div>
+                                </div>
+                                <div class="scan-line"></div>
+                            </div>
+                            <p class="scanner-text" data-translate="scan.camera">将追踪码放在扫描框内</p>
+                        </div>
+                        <video id="scannerVideo" autoplay muted playsinline></video>
+                        <canvas id="scannerCanvas" style="display: none;"></canvas>
+                    </div>
+                    
+                    <div class="scanner-controls">
+                        <button class="scanner-btn" id="startScanBtn" onclick="startCamera()">
+                            <i class="fas fa-camera"></i>
+                            <span data-translate="scan.camera">开启摄像头</span>
+                        </button>
+                        <button class="scanner-btn secondary" id="stopScanBtn" onclick="stopCamera()" style="display: none;">
+                            <i class="fas fa-stop"></i>
+                            <span>停止扫描</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Manual Input Section -->
+                <div class="input-section">
+                    <div class="input-header">
+                        <h2>手动输入追踪号</h2>
+                        <p>或者手动输入追踪号码</p>
+                    </div>
+                    
+                    <div class="input-group">
+                        <input 
+                            type="text" 
+                            id="trackingInput" 
+                            placeholder="输入追踪号..." 
+                            data-translate-placeholder="scan.placeholder"
+                            maxlength="50"
+                        >
+                        <button class="search-btn" onclick="searchTracking()">
+                            <i class="fas fa-search"></i>
+                            <span data-translate="common.search">搜索</span>
+                        </button>
+                    </div>
+                    
+                    <div class="quick-actions">
+                        <button class="quick-btn" onclick="pasteFromClipboard()">
+                            <i class="fas fa-clipboard"></i>
+                            <span>从剪贴板粘贴</span>
+                        </button>
+                        <button class="quick-btn" onclick="clearInput()">
+                            <i class="fas fa-times"></i>
+                            <span>清除</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Results Section -->
+                <div class="results-section" id="resultsSection" style="display: none;">
+                    <div class="result-card" id="resultCard">
+                        <!-- Results will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay" style="display: none;">
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+            <p data-translate="scan.processing">处理中...</p>
+        </div>
+    </div>
+
+    <!-- Mobile Navigation -->
+    <nav class="mobile-nav">
+        <a href="index.html" class="nav-item">
+            <i class="fas fa-home"></i>
+            <span data-translate="nav.home">首页</span>
+        </a>
+        <a href="scan.html" class="nav-item active">
+            <i class="fas fa-qrcode"></i>
+            <span data-translate="nav.scan">扫描追踪</span>
+        </a>
+        <a href="shipments.html" class="nav-item">
+            <i class="fas fa-truck"></i>
+            <span data-translate="nav.shipments">发货</span>
+        </a>
+        <a href="search.html" class="nav-item">
+            <i class="fas fa-search"></i>
+            <span data-translate="nav.search">搜索订单</span>
+        </a>
+        <a href="statistics.html" class="nav-item">
+            <i class="fas fa-chart-line"></i>
+            <span data-translate="nav.statistics">统计数据</span>
+        </a>
+    </nav>
+
+    <script src="script.js"></script>
+    <script src="scan-script.js"></script>
+</body>
+</html>

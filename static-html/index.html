@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LogiFlow - 中哈物流员工工作平台 | 包裹追踪与订单管理系统</title>
+    <meta name="description" content="专业的中国-哈萨克斯坦物流管理平台，为员工提供实时包裹追踪、订单管理、统计分析等功能。支持中文、英文、俄文、哈萨克文多语言界面。">
+    <meta name="keywords" content="物流管理,包裹追踪,订单管理,中哈物流,员工平台,多语言系统">
+    
+    <meta property="og:title" content="LogiFlow - 中哈物流员工工作平台">
+    <meta property="og:description" content="现代化的物流管理平台，支持实时追踪、订单管理和数据分析">
+    <meta property="og:type" content="website">
+    
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <!-- Logo -->
+                <div class="logo">
+                    <div class="logo-icon">🚚</div>
+                    <span class="logo-text">LogiFlow</span>
+                </div>
+                
+                <!-- Right side -->
+                <div class="header-right">
+                    <!-- Language Switcher -->
+                    <div class="dropdown">
+                        <button class="lang-btn" onclick="toggleDropdown('langDropdown')">
+                            <i class="fas fa-globe"></i>
+                            <span id="currentFlag">🇨🇳</span>
+                        </button>
+                        <div class="dropdown-content" id="langDropdown">
+                            <a href="#" onclick="changeLanguage('zh-CN')">🇨🇳 中文</a>
+                            <a href="#" onclick="changeLanguage('en-US')">🇺🇸 English</a>
+                            <a href="#" onclick="changeLanguage('ru-RU')">🇷🇺 Русский</a>
+                            <a href="#" onclick="changeLanguage('kk-KZ')">🇰🇿 Қазақша</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Profile -->
+                    <div class="dropdown">
+                        <button class="profile-btn" onclick="toggleDropdown('profileDropdown')">
+                            <div class="avatar">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <span class="username">张伟</span>
+                        </button>
+                        <div class="dropdown-content" id="profileDropdown">
+                            <a href="#" data-translate="profile">个人资料</a>
+                            <a href="#" data-translate="settings">设置</a>
+                            <a href="#" data-translate="logout">退出登录</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-background"></div>
+        <div class="hero-pattern"></div>
+        
+        <div class="container">
+            <div class="hero-content">
+                <!-- Animated Icons -->
+                <div class="hero-icons">
+                    <div class="icon-animated truck">🚚</div>
+                    <div class="icon-animated package">📦</div>
+                    <div class="icon-animated globe">🌏</div>
+                </div>
+                
+                <!-- Main Title -->
+                <h1 class="hero-title" data-translate="hero.title">员工工作平台</h1>
+                
+                <!-- Subtitle -->
+                <p class="hero-subtitle" data-translate="hero.subtitle">中国 ⇄ 哈萨克斯坦物流管理系统</p>
+                
+                <!-- Description -->
+                <p class="hero-description" data-translate="hero.description">高效管理订单、追踪货物、查看统计数据的现代化平台</p>
+            </div>
+            
+            <!-- Decorative Elements -->
+            <div class="floating-icon airplane">✈️</div>
+            <div class="floating-icon building">🏢</div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <div class="features-grid">
+                <!-- Track Scan Card -->
+                <div class="feature-card track-scan" onclick="navigateTo('scan.html')">
+                    <div class="card-background"></div>
+                    <div class="card-content">
+                        <div class="card-icon">
+                            <i class="fas fa-barcode"></i>
+                        </div>
+                        <h3 data-translate="features.trackScan.title">扫描追踪</h3>
+                        <p data-translate="features.trackScan.description">扫描条形码快速追踪包裹</p>
+                    </div>
+                </div>
+                
+                <!-- Shipments Card -->
+                <div class="feature-card shipments" onclick="navigateTo('shipments.html')">
+                    <div class="card-background"></div>
+                    <div class="card-content">
+                        <div class="card-icon">
+                            <i class="fas fa-truck"></i>
+                        </div>
+                        <h3 data-translate="features.shipments.title">发货管理</h3>
+                        <p data-translate="features.shipments.description">管理和查看所有发货信息</p>
+                    </div>
+                </div>
+                
+                <!-- Search Card -->
+                <div class="feature-card search" onclick="navigateTo('search.html')">
+                    <div class="card-background"></div>
+                    <div class="card-content">
+                        <div class="card-icon">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <h3 data-translate="features.search.title">搜索订单</h3>
+                        <p data-translate="features.search.description">按追踪号或客户姓名搜索</p>
+                    </div>
+                </div>
+                
+                <!-- Statistics Card -->
+                <div class="feature-card statistics" onclick="navigateTo('statistics.html')">
+                    <div class="card-background"></div>
+                    <div class="card-content">
+                        <div class="card-icon">
+                            <i class="fas fa-chart-bar"></i>
+                        </div>
+                        <h3 data-translate="features.statistics.title">统计数据</h3>
+                        <p data-translate="features.statistics.description">查看详细的业务统计图表</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Additional Info Section -->
+            <div class="info-section">
+                <div class="info-card">
+                    <h2>🚀 高效物流管理</h2>
+                    <p>专为中哈物流业务设计的员工工作平台，提供实时包裹追踪、订单管理和数据分析功能，让您的工作更加高效便捷。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mobile Navigation -->
+    <nav class="mobile-nav">
+        <a href="index.html" class="nav-item active">
+            <i class="fas fa-home"></i>
+            <span data-translate="nav.home">首页</span>
+        </a>
+        <a href="scan.html" class="nav-item">
+            <i class="fas fa-qrcode"></i>
+            <span data-translate="nav.scan">扫描追踪</span>
+        </a>
+        <a href="shipments.html" class="nav-item">
+            <i class="fas fa-truck"></i>
+            <span data-translate="nav.shipments">发货</span>
+        </a>
+        <a href="search.html" class="nav-item">
+            <i class="fas fa-search"></i>
+            <span data-translate="nav.search">搜索订单</span>
+        </a>
+        <a href="statistics.html" class="nav-item">
+            <i class="fas fa-chart-line"></i>
+            <span data-translate="nav.statistics">统计数据</span>
+        </a>
+    </nav>
+
+    <script src="script.js"></script>
+</body>
+</html>

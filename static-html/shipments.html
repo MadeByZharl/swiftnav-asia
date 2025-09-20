@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>发货管理 - LogiFlow</title>
+    <meta name="description" content="管理和查看所有发货信息">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="shipments-styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo" onclick="navigateTo('index.html')">
+                    <div class="logo-icon">🚚</div>
+                    <span class="logo-text">LogiFlow</span>
+                </div>
+                
+                <div class="header-right">
+                    <div class="dropdown">
+                        <button class="lang-btn" onclick="toggleDropdown('langDropdown')">
+                            <i class="fas fa-globe"></i>
+                            <span id="currentFlag">🇨🇳</span>
+                        </button>
+                        <div class="dropdown-content" id="langDropdown">
+                            <a href="#" onclick="changeLanguage('zh-CN')">🇨🇳 中文</a>
+                            <a href="#" onclick="changeLanguage('en-US')">🇺🇸 English</a>
+                            <a href="#" onclick="changeLanguage('ru-RU')">🇷🇺 Русский</a>
+                            <a href="#" onclick="changeLanguage('kk-KZ')">🇰🇿 Қазақша</a>
+                        </div>
+                    </div>
+                    
+                    <div class="dropdown">
+                        <button class="profile-btn" onclick="toggleDropdown('profileDropdown')">
+                            <div class="avatar">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <span class="username">张伟</span>
+                        </button>
+                        <div class="dropdown-content" id="profileDropdown">
+                            <a href="#" data-translate="profile">个人资料</a>
+                            <a href="#" data-translate="settings">设置</a>
+                            <a href="#" data-translate="logout">退出登录</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="shipments-main">
+        <div class="container">
+            <div class="page-header">
+                <button class="back-btn" onclick="navigateTo('index.html')">
+                    <i class="fas fa-arrow-left"></i>
+                    <span data-translate="common.back">返回</span>
+                </button>
+                <h1 data-translate="features.shipments.title">发货管理</h1>
+                <button class="add-btn" onclick="showAddModal()">
+                    <i class="fas fa-plus"></i>
+                    <span>新建发货</span>
+                </button>
+            </div>
+
+            <!-- Filters -->
+            <div class="filters-section">
+                <div class="filter-group">
+                    <select id="statusFilter" class="filter-select" onchange="filterShipments()">
+                        <option value="">所有状态</option>
+                        <option value="pending">待发货</option>
+                        <option value="shipped">已发货</option>
+                        <option value="in-transit">运输中</option>
+                        <option value="delivered">已送达</option>
+                    </select>
+                    
+                    <input type="date" id="dateFilter" class="filter-date" onchange="filterShipments()">
+                    
+                    <div class="search-box">
+                        <input type="text" id="searchInput" placeholder="搜索订单号或收件人..." onkeyup="searchShipments()">
+                        <i class="fas fa-search"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Shipments List -->
+            <div class="shipments-list" id="shipmentsList">
+                <!-- Shipments will be populated here -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Mobile Navigation -->
+    <nav class="mobile-nav">
+        <a href="index.html" class="nav-item">
+            <i class="fas fa-home"></i>
+            <span data-translate="nav.home">首页</span>
+        </a>
+        <a href="scan.html" class="nav-item">
+            <i class="fas fa-qrcode"></i>
+            <span data-translate="nav.scan">扫描追踪</span>
+        </a>
+        <a href="shipments.html" class="nav-item active">
+            <i class="fas fa-truck"></i>
+            <span data-translate="nav.shipments">发货</span>
+        </a>
+        <a href="search.html" class="nav-item">
+            <i class="fas fa-search"></i>
+            <span data-translate="nav.search">搜索订单</span>
+        </a>
+        <a href="statistics.html" class="nav-item">
+            <i class="fas fa-chart-line"></i>
+            <span data-translate="nav.statistics">统计数据</span>
+        </a>
+    </nav>
+
+    <!-- Shipment Details Modal -->
+    <div class="modal" id="shipmentModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>发货详情</h2>
+                <button class="close-btn" onclick="closeModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Details will be populated here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="shipments-script.js"></script>
+</body>
+</html>
