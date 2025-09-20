@@ -1,0 +1,48 @@
+{
+  "nav": {
+    "home": "首页",
+    "scan": "扫描追踪",
+    "shipments": "发货",
+    "search": "搜索订单",
+    "statistics": "统计数据"
+  },
+  "hero": {
+    "title": "员工工作平台",
+    "subtitle": "中国 ⇄ 哈萨克斯坦物流管理系统",
+    "description": "高效管理订单、追踪货物、查看统计数据的现代化平台"
+  },
+  "features": {
+    "trackScan": {
+      "title": "扫描追踪",
+      "description": "扫描条形码快速追踪包裹"
+    },
+    "shipments": {
+      "title": "发货管理",
+      "description": "管理和查看所有发货信息"
+    },
+    "search": {
+      "title": "搜索订单",
+      "description": "按追踪号或客户姓名搜索"
+    },
+    "statistics": {
+      "title": "统计数据",
+      "description": "查看详细的业务统计图表"
+    }
+  },
+  "scan": {
+    "title": "扫描追踪码",
+    "placeholder": "输入或扫描追踪号...",
+    "camera": "使用相机扫描",
+    "success": "扫描成功！",
+    "error": "未找到追踪信息",
+    "processing": "处理中..."
+  },
+  "common": {
+    "loading": "加载中...",
+    "search": "搜索",
+    "cancel": "取消",
+    "confirm": "确认",
+    "back": "返回",
+    "next": "下一步"
+  }
+}

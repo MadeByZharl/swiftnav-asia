@@ -1,0 +1,48 @@
+{
+  "nav": {
+    "home": "Home",
+    "scan": "Track Scan",
+    "shipments": "Shipments",
+    "search": "Search Orders",
+    "statistics": "Statistics"
+  },
+  "hero": {
+    "title": "Employee Work Platform",
+    "subtitle": "China ⇄ Kazakhstan Logistics Management System",
+    "description": "Modern platform for efficient order management, package tracking, and statistics viewing"
+  },
+  "features": {
+    "trackScan": {
+      "title": "Track Scanner",
+      "description": "Scan barcodes to quickly track packages"
+    },
+    "shipments": {
+      "title": "Shipments",
+      "description": "Manage and view all shipment information"
+    },
+    "search": {
+      "title": "Search Orders",
+      "description": "Search by tracking number or customer name"
+    },
+    "statistics": {
+      "title": "Statistics",
+      "description": "View detailed business statistics and charts"
+    }
+  },
+  "scan": {
+    "title": "Scan Tracking Code",
+    "placeholder": "Enter or scan tracking number...",
+    "camera": "Use camera to scan",
+    "success": "Scan successful!",
+    "error": "Tracking information not found",
+    "processing": "Processing..."
+  },
+  "common": {
+    "loading": "Loading...",
+    "search": "Search",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "back": "Back",
+    "next": "Next"
+  }
+}

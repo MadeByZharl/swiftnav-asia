@@ -8,7 +8,7 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    --background: 216 19% 97%;
     --foreground: 222.2 84% 4.9%;
 
     --card: 0 0% 100%;
@@ -35,6 +35,29 @@ All colors MUST be HSL.
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
     --ring: 222.2 84% 4.9%;
+
+    /* Feature Colors */
+    --track-scan: 0 84% 60%;
+    --track-scan-foreground: 0 0% 98%;
+    --shipments: 25 95% 53%;
+    --shipments-foreground: 0 0% 98%;
+    --search: 217 91% 60%;
+    --search-foreground: 0 0% 98%;
+    --statistics: 142 69% 58%;
+    --statistics-foreground: 0 0% 98%;
+
+    /* Gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(217 91% 60%), hsl(142 69% 58%));
+    --gradient-card: linear-gradient(145deg, hsl(var(--card)), hsl(0 0% 99%));
+    
+    /* Shadows */
+    --shadow-card: 0 4px 12px -4px hsl(222.2 84% 4.9% / 0.1);
+    --shadow-card-hover: 0 8px 25px -8px hsl(222.2 84% 4.9% / 0.25);
+    --shadow-feature: 0 10px 30px -10px;
+    
+    /* Animation */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 
     --radius: 0.5rem;
 
