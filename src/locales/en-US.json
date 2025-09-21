@@ -4,7 +4,27 @@
     "scan": "Track Scan",
     "shipments": "Shipments",
     "search": "Search Orders",
-    "statistics": "Statistics"
+    "statistics": "Statistics",
+    "branches": "Branches",
+    "employees": "Employees",
+    "orders": "Orders",
+    "logout": "Logout"
+  },
+  "auth": {
+    "login": "Login",
+    "signup": "Sign Up",
+    "email": "Email",
+    "password": "Password",
+    "name": "Name",
+    "phone": "Phone",
+    "signInButton": "Sign In",
+    "signUpButton": "Sign Up",
+    "switchToSignup": "Don't have an account? Sign up",
+    "switchToLogin": "Already have an account? Sign in",
+    "loginTitle": "Employee Login",
+    "signupTitle": "Employee Registration",
+    "loginError": "Login failed",
+    "signupError": "Registration failed"
   },
   "hero": {
     "title": "Employee Work Platform",
@@ -27,7 +47,54 @@
     "statistics": {
       "title": "Statistics",
       "description": "View detailed business statistics and charts"
+    },
+    "branches": {
+      "title": "Branch Management",
+      "description": "View and manage all branch information"
+    },
+    "employees": {
+      "title": "Employee Management",
+      "description": "Manage employee accounts and permissions"
+    },
+    "orders": {
+      "title": "Order Management",
+      "description": "View and update order statuses"
     }
+  },
+  "branches": {
+    "title": "Branches",
+    "viewOrders": "View Orders",
+    "address": "Address",
+    "phone": "Phone",
+    "city": "City"
+  },
+  "employees": {
+    "title": "Employees",
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone",
+    "role": "Role",
+    "branch": "Branch",
+    "actions": "Actions",
+    "edit": "Edit",
+    "delete": "Delete",
+    "add": "Add Employee"
+  },
+  "orders": {
+    "title": "Orders",
+    "trackNumber": "Track Number",
+    "status": "Status",
+    "branch": "Branch",
+    "history": "History",
+    "updateStatus": "Update Status"
+  },
+  "statistics": {
+    "title": "Statistics",
+    "totalOrders": "Total Orders",
+    "delivered": "Delivered",
+    "inTransit": "In Transit",
+    "pending": "Pending",
+    "byBranch": "By Branch"
   },
   "scan": {
     "title": "Scan Tracking Code",
@@ -43,6 +110,10 @@
     "cancel": "Cancel",
     "confirm": "Confirm",
     "back": "Back",
-    "next": "Next"
+    "next": "Next",
+    "save": "Save",
+    "edit": "Edit",
+    "delete": "Delete",
+    "add": "Add"
   }
 }
