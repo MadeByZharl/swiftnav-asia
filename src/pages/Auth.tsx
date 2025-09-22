@@ -10,14 +10,11 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 
 const Auth = () => {
-  const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [name, setName] = useState('');
-  const [phone, setPhone] = useState('');
   const [loading, setLoading] = useState(false);
   
-  const { signIn, signUp, user } = useAuth();
+  const { signIn, user } = useAuth();
   const { t } = useTranslation();
 
   // Redirect if already authenticated
@@ -30,11 +27,7 @@ const Auth = () => {
     setLoading(true);
 
     try {
-      if (isLogin) {
-        await signIn(email, password);
-      } else {
-        await signUp(email, password, name, phone);
-      }
+      await signIn(email, password);
     } finally {
       setLoading(false);
     }
@@ -126,54 +119,22 @@ const Auth = () => {
             </motion.div>
             
             <CardTitle className="text-2xl font-bold">
-              {isLogin ? t('auth.loginTitle') : t('auth.signupTitle')}
+              Khan Cargo
             </CardTitle>
             
             <CardDescription>
-              {t('hero.subtitle')}
+              Система управления грузоперевозками
             </CardDescription>
           </CardHeader>
           
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
-              {!isLogin && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  transition={{ duration: 0.3 }}
-                  className="space-y-4"
-                >
-                  <div className="space-y-2">
-                    <Label htmlFor="name">{t('auth.name')}</Label>
-                    <Input
-                      id="name"
-                      type="text"
-                      placeholder={t('auth.name')}
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      required
-                    />
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="phone">{t('auth.phone')}</Label>
-                    <Input
-                      id="phone"
-                      type="tel"
-                      placeholder={t('auth.phone')}
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                    />
-                  </div>
-                </motion.div>
-              )}
-              
               <div className="space-y-2">
-                <Label htmlFor="email">{t('auth.email')}</Label>
+                <Label htmlFor="email">Email</Label>
                 <Input
                   id="email"
                   type="email"
-                  placeholder={t('auth.email')}
+                  placeholder="Введите email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
@@ -181,11 +142,11 @@ const Auth = () => {
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="password">{t('auth.password')}</Label>
+                <Label htmlFor="password">Пароль</Label>
                 <Input
                   id="password"
                   type="password"
-                  placeholder={t('auth.password')}
+                  placeholder="Введите пароль"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
@@ -197,19 +158,9 @@ const Auth = () => {
                 className="w-full"
                 disabled={loading}
               >
-                {loading ? t('common.loading') : (isLogin ? t('auth.signInButton') : t('auth.signUpButton'))}
+                {loading ? 'Загрузка...' : 'Войти'}
               </Button>
             </form>
-            
-            <div className="mt-6 text-center">
-              <Button
-                variant="ghost"
-                onClick={() => setIsLogin(!isLogin)}
-                disabled={loading}
-              >
-                {isLogin ? t('auth.switchToSignup') : t('auth.switchToLogin')}
-              </Button>
-            </div>
           </CardContent>
         </Card>
       </motion.div>

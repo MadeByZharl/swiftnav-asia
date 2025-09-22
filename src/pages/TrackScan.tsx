@@ -1,56 +1,106 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import { Button } from '@/components/ui/button';
+import { Package, Search, Plus } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Card } from '@/components/ui/card';
-import { Camera, Search, CheckCircle, XCircle, Loader2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
 import Header from '@/components/Header';
+import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/contexts/AuthContext';
 
-const TrackScan: React.FC = () => {
+interface Branch {
+  id: string;
+  name: string;
+  city: string;
+}
+
+const TrackScan = () => {
   const { t } = useTranslation();
-  const [trackingCode, setTrackingCode] = useState('');
-  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const { toast } = useToast();
+  const { employee } = useAuth();
+  
+  const [trackNumber, setTrackNumber] = useState('');
+  const [status, setStatus] = useState('');
+  const [branchId, setBranchId] = useState('');
+  const [userId, setUserId] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [branches, setBranches] = useState<Branch[]>([]);
 
-  const handleScan = () => {
-    setStatus('loading');
+  // Fetch branches when component mounts
+  useEffect(() => {
+    const fetchBranches = async () => {
+      const { data } = await supabase.from('branches').select('*');
+      if (data) setBranches(data);
+    };
+    fetchBranches();
+  }, []);
+
+  const handleCreateOrder = async (e: React.FormEvent) => {
+    e.preventDefault();
     
-    // Simulate API call
-    setTimeout(() => {
-      if (trackingCode.length > 5) {
-        setStatus('success');
-      } else {
-        setStatus('error');
+    if (!employee || employee.role !== 'admin') {
+      toast({
+        title: "Доступ запрещен",
+        description: "Только администратор может создавать заказы",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      // Create initial history entry
+      const initialHistory = [{
+        stage: "Добавлен трек в системе",
+        date: new Date().toISOString().split('T')[0]
+      }];
+
+      const { data, error } = await supabase
+        .from('orders')
+        .insert({
+          track_number: trackNumber,
+          status: status || 'Добавлен в систему',
+          branch_id: branchId || null,
+          user_id: parseInt(userId) || 1001,
+          history: initialHistory
+        })
+        .select()
+        .single();
+
+      if (error) {
+        throw error;
       }
-    }, 2000);
+
+      toast({
+        title: "Успех!",
+        description: `Заказ ${trackNumber} успешно создан`,
+      });
+
+      // Reset form
+      setTrackNumber('');
+      setStatus('');
+      setBranchId('');
+      setUserId('');
+    } catch (error: any) {
+      toast({
+        title: "Ошибка",
+        description: error.message || "Не удалось создать заказ",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const StatusIcon = () => {
-    switch (status) {
-      case 'loading':
-        return <Loader2 className="h-16 w-16 animate-spin text-search" />;
-      case 'success':
-        return (
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ type: "spring", stiffness: 200 }}
-          >
-            <CheckCircle className="h-16 w-16 text-statistics" />
-          </motion.div>
-        );
-      case 'error':
-        return (
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            className="animate-shake"
-          >
-            <XCircle className="h-16 w-16 text-track-scan" />
-          </motion.div>
-        );
-      default:
-        return null;
+  const handleSearchTrack = () => {
+    if (trackNumber) {
+      window.open(`/search?search=${trackNumber}`, '_blank');
     }
   };
 
@@ -58,97 +108,152 @@ const TrackScan: React.FC = () => {
     <div className="min-h-screen bg-background">
       <Header />
       
-      <div className="container mx-auto px-4 py-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="max-w-2xl mx-auto"
-        >
-          <Card className="p-8 shadow-lg">
-            <motion.div 
-              className="text-center mb-8"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.2 }}
-            >
-              <h1 className="text-3xl font-bold mb-4 bg-gradient-to-r from-track-scan to-statistics bg-clip-text text-transparent">
-                {t('scan.title')}
-              </h1>
-            </motion.div>
+      <main className="container mx-auto px-4 py-8">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-foreground mb-2">
+            Управление треками
+          </h1>
+          <p className="text-muted-foreground">
+            Создание новых заказов и поиск существующих треков
+          </p>
+        </div>
 
-            <div className="space-y-6">
-              <div className="flex space-x-2">
-                <Input
-                  placeholder={t('scan.placeholder')}
-                  value={trackingCode}
-                  onChange={(e) => setTrackingCode(e.target.value)}
-                  className="flex-1"
-                  onKeyPress={(e) => e.key === 'Enter' && handleScan()}
-                />
-                <Button
-                  onClick={handleScan}
-                  disabled={!trackingCode || status === 'loading'}
-                  className="bg-search hover:bg-search/90"
-                >
-                  <Search className="h-4 w-4" />
-                </Button>
-              </div>
-
-              <Button 
-                variant="outline" 
-                className="w-full"
-                onClick={() => {
-                  // Camera functionality would go here
-                  console.log('Camera scan');
-                }}
-              >
-                <Camera className="h-4 w-4 mr-2" />
-                {t('scan.camera')}
-              </Button>
-
-              <AnimatePresence mode="wait">
-                {status !== 'idle' && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    className="flex flex-col items-center space-y-4 py-8"
-                  >
-                    <StatusIcon />
-                    <motion.p
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ delay: 0.2 }}
-                      className="text-lg font-medium"
-                    >
-                      {status === 'loading' && t('scan.processing')}
-                      {status === 'success' && t('scan.success')}
-                      {status === 'error' && t('scan.error')}
-                    </motion.p>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-
-              {status === 'success' && (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.5 }}
-                  className="bg-statistics/10 border border-statistics/20 rounded-lg p-4"
-                >
-                  <h3 className="font-semibold text-statistics mb-2">包裹信息</h3>
-                  <div className="space-y-1 text-sm">
-                    <p><span className="font-medium">追踪号:</span> {trackingCode}</p>
-                    <p><span className="font-medium">状态:</span> 运输中</p>
-                    <p><span className="font-medium">位置:</span> 阿拉木图仓库</p>
-                    <p><span className="font-medium">预计送达:</span> 2024-01-15</p>
+        <div className="grid gap-6 md:grid-cols-2">
+          {/* Create New Track */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Plus className="w-5 h-5" />
+                  Создать новый трек
+                </CardTitle>
+              </CardHeader>
+              
+              <CardContent>
+                <form onSubmit={handleCreateOrder} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="trackNumber">Трек-номер *</Label>
+                    <Input
+                      id="trackNumber"
+                      type="text"
+                      placeholder="YT1234567890123"
+                      value={trackNumber}
+                      onChange={(e) => setTrackNumber(e.target.value)}
+                      required
+                    />
                   </div>
-                </motion.div>
-              )}
-            </div>
-          </Card>
-        </motion.div>
-      </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="userId">ID пользователя *</Label>
+                    <Input
+                      id="userId"
+                      type="number"
+                      placeholder="1001"
+                      value={userId}
+                      onChange={(e) => setUserId(e.target.value)}
+                      required
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="status">Статус</Label>
+                    <Select value={status} onValueChange={setStatus}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Выберите статус" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Добавлен в систему">Добавлен в систему</SelectItem>
+                        <SelectItem value="Принят в Китае">Принят в Китае</SelectItem>
+                        <SelectItem value="В пути в Казахстан">В пути в Казахстан</SelectItem>
+                        <SelectItem value="Прибыл в филиал">Прибыл в филиал</SelectItem>
+                        <SelectItem value="Готов к выдаче">Готов к выдаче</SelectItem>
+                        <SelectItem value="Выдан">Выдан</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="branch">Филиал</Label>
+                    <Select value={branchId} onValueChange={setBranchId}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Выберите филиал" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {branches.map((branch) => (
+                          <SelectItem key={branch.id} value={branch.id}>
+                            {branch.name} - {branch.city}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <Button
+                    type="submit"
+                    className="w-full"
+                    disabled={loading}
+                  >
+                    {loading ? 'Создание...' : 'Создать заказ'}
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
+          </motion.div>
+
+          {/* Search Track */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Search className="w-5 h-5" />
+                  Поиск трека
+                </CardTitle>
+              </CardHeader>
+              
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="searchTrack">Трек-номер</Label>
+                  <Input
+                    id="searchTrack"
+                    type="text"
+                    placeholder="Введите трек-номер для поиска"
+                    value={trackNumber}
+                    onChange={(e) => setTrackNumber(e.target.value)}
+                  />
+                </div>
+
+                <Button
+                  onClick={handleSearchTrack}
+                  className="w-full"
+                  disabled={!trackNumber}
+                >
+                  <Search className="w-4 h-4 mr-2" />
+                  Найти трек
+                </Button>
+
+                <div className="text-center">
+                  <Button
+                    variant="outline"
+                    onClick={() => window.open('/orders', '_blank')}
+                    className="w-full"
+                  >
+                    <Package className="w-4 h-4 mr-2" />
+                    Все заказы
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </div>
+      </main>
     </div>
   );
 };

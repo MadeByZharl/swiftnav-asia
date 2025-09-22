@@ -90,7 +90,7 @@ const Dashboard = () => {
         <div className="flex justify-between items-center mb-8">
           <div>
             <h1 className="text-3xl font-bold text-foreground mb-2">
-              {t('hero.title')}
+              Khan Cargo
             </h1>
             <p className="text-muted-foreground">
               {employee ? `Welcome, ${employee.name}` : 'Welcome'}
