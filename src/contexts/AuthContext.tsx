@@ -8,7 +8,7 @@ interface Employee {
   name: string;
   email: string;
   phone?: string;
-  role: 'admin' | 'china_worker' | 'branch_worker';
+  role: 'admin' | 'china_worker' | 'kz_worker';
   branch_id?: string;
 }
 
@@ -18,8 +18,8 @@ interface AuthContextType {
   employee: Employee | null;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<{ error: any }>;
-  signUp: (email: string, password: string, name: string, phone: string) => Promise<{ error: any }>;
   signOut: () => Promise<void>;
+  createEmployee: (userData: Partial<Employee> & { password: string }) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -54,7 +54,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       setEmployee({
         ...data,
-        role: data.role as 'admin' | 'china_worker' | 'branch_worker'
+        role: data.role as 'admin' | 'china_worker' | 'kz_worker'
       });
     } catch (error) {
       console.error('Error fetching employee:', error);
@@ -119,61 +119,31 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const signUp = async (email: string, password: string, name: string, phone: string) => {
+  const createEmployee = async (userData: Partial<Employee> & { password: string }) => {
     try {
-      const redirectUrl = `${window.location.origin}/`;
-      
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          emailRedirectTo: redirectUrl,
-          data: {
-            name,
-            phone,
-          }
-        }
+      const { data, error } = await supabase.auth.admin.createUser({
+        email: userData.email!,
+        password: userData.password,
+        email_confirm: true
       });
 
-      if (error) {
-        toast({
-          title: "Registration Error",
-          description: error.message,
-          variant: "destructive",
-        });
-        return { error };
-      }
+      if (error) throw error;
 
       // Create employee record
-      if (data.user) {
-        const { error: employeeError } = await supabase
-          .from('employees')
-          .insert({
-            user_id: data.user.id,
-            name,
-            email,
-            phone,
-            role: 'branch_worker', // Default role
-          });
+      const { error: employeeError } = await supabase
+        .from('employees')
+        .insert({
+          user_id: data.user.id,
+          name: userData.name!,
+          email: userData.email!,
+          phone: userData.phone,
+          role: userData.role!,
+          branch_id: userData.branch_id
+        });
 
-        if (employeeError) {
-          console.error('Error creating employee record:', employeeError);
-        }
-      }
-
-      toast({
-        title: "Registration Successful",
-        description: "Please check your email to confirm your account.",
-      });
-
-      return { error: null };
+      if (employeeError) throw employeeError;
     } catch (error: any) {
-      toast({
-        title: "Registration Error",
-        description: error.message,
-        variant: "destructive",
-      });
-      return { error };
+      throw error;
     }
   };
 
@@ -200,8 +170,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     employee,
     loading,
     signIn,
-    signUp,
     signOut,
+    createEmployee,
   };
 
   return (
