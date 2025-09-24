@@ -14,33 +14,104 @@ export type Database = {
   }
   public: {
     Tables: {
+      audit_logs: {
+        Row: {
+          action: string | null
+          created_at: string | null
+          employee_id: string | null
+          id: number
+          payload: Json | null
+        }
+        Insert: {
+          action?: string | null
+          created_at?: string | null
+          employee_id?: string | null
+          id?: number
+          payload?: Json | null
+        }
+        Update: {
+          action?: string | null
+          created_at?: string | null
+          employee_id?: string | null
+          id?: number
+          payload?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "audit_logs_employee_id_fkey"
+            columns: ["employee_id"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       branches: {
         Row: {
           address: string
           city: string
+          code: string | null
           created_at: string
           id: string
           name: string
           phone: string
+          two_gis_link: string | null
           updated_at: string
         }
         Insert: {
           address: string
           city: string
+          code?: string | null
           created_at?: string
           id?: string
           name: string
           phone: string
+          two_gis_link?: string | null
           updated_at?: string
         }
         Update: {
           address?: string
           city?: string
+          code?: string | null
           created_at?: string
           id?: string
           name?: string
           phone?: string
+          two_gis_link?: string | null
           updated_at?: string
+        }
+        Relationships: []
+      }
+      clients: {
+        Row: {
+          city: string | null
+          client_code: number | null
+          created_at: string | null
+          id: number
+          language: string | null
+          name: string | null
+          phone: string | null
+          telegram_id: number | null
+        }
+        Insert: {
+          city?: string | null
+          client_code?: number | null
+          created_at?: string | null
+          id?: number
+          language?: string | null
+          name?: string | null
+          phone?: string | null
+          telegram_id?: number | null
+        }
+        Update: {
+          city?: string | null
+          client_code?: number | null
+          created_at?: string | null
+          id?: number
+          language?: string | null
+          name?: string | null
+          phone?: string | null
+          telegram_id?: number | null
         }
         Relationships: []
       }
@@ -50,7 +121,9 @@ export type Database = {
           created_at: string
           email: string
           id: string
+          login: string | null
           name: string
+          password_hash: string | null
           phone: string | null
           role: string
           updated_at: string
@@ -61,7 +134,9 @@ export type Database = {
           created_at?: string
           email: string
           id?: string
+          login?: string | null
           name: string
+          password_hash?: string | null
           phone?: string | null
           role: string
           updated_at?: string
@@ -72,7 +147,9 @@ export type Database = {
           created_at?: string
           email?: string
           id?: string
+          login?: string | null
           name?: string
+          password_hash?: string | null
           phone?: string | null
           role?: string
           updated_at?: string
@@ -88,36 +165,87 @@ export type Database = {
           },
         ]
       }
+      order_history: {
+        Row: {
+          changed_at: string | null
+          changed_by: string | null
+          id: number
+          note: string | null
+          order_id: string | null
+          status: string
+        }
+        Insert: {
+          changed_at?: string | null
+          changed_by?: string | null
+          id?: number
+          note?: string | null
+          order_id?: string | null
+          status: string
+        }
+        Update: {
+          changed_at?: string | null
+          changed_by?: string | null
+          id?: number
+          note?: string | null
+          order_id?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_history_changed_by_fkey"
+            columns: ["changed_by"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_history_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       orders: {
         Row: {
           branch_id: string | null
+          client_id: number | null
           created_at: string
+          created_by: string | null
           history: Json | null
           id: string
           status: string
           track_number: string
           updated_at: string
-          user_id: number
+          user_id: number | null
+          version: number | null
         }
         Insert: {
           branch_id?: string | null
+          client_id?: number | null
           created_at?: string
+          created_by?: string | null
           history?: Json | null
           id?: string
           status: string
           track_number: string
           updated_at?: string
-          user_id: number
+          user_id?: number | null
+          version?: number | null
         }
         Update: {
           branch_id?: string | null
+          client_id?: number | null
           created_at?: string
+          created_by?: string | null
           history?: Json | null
           id?: string
           status?: string
           track_number?: string
           updated_at?: string
-          user_id?: number
+          user_id?: number | null
+          version?: number | null
         }
         Relationships: [
           {
@@ -125,6 +253,65 @@ export type Database = {
             columns: ["branch_id"]
             isOneToOne: false
             referencedRelation: "branches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "orders_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "orders_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      payments: {
+        Row: {
+          amount: number | null
+          client_id: number | null
+          created_at: string | null
+          id: number
+          order_id: string | null
+          receipt_url: string | null
+          status: string | null
+        }
+        Insert: {
+          amount?: number | null
+          client_id?: number | null
+          created_at?: string | null
+          id?: number
+          order_id?: string | null
+          receipt_url?: string | null
+          status?: string | null
+        }
+        Update: {
+          amount?: number | null
+          client_id?: number | null
+          created_at?: string | null
+          id?: number
+          order_id?: string | null
+          receipt_url?: string | null
+          status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payments_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payments_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
             referencedColumns: ["id"]
           },
         ]
