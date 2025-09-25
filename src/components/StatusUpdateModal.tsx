@@ -63,8 +63,8 @@ export const StatusUpdateModal: React.FC<StatusUpdateModalProps> = ({
       if (error) throw error;
       setBranches(data || []);
       
-      // Auto-select employee's branch for kz workers
-      if (employee?.role === 'kz_worker' && employee.branch_id) {
+      // Auto-select employee's branch for branch workers
+      if (employee?.role === 'branch_worker' && employee.branch_id) {
         setBranchId(employee.branch_id);
       }
     } catch (error: any) {

@@ -20,7 +20,7 @@ interface Employee {
   name: string;
   email: string;
   phone?: string;
-  role: 'admin' | 'china_worker' | 'kz_worker';
+  role: 'admin' | 'china_worker' | 'branch_worker';
   branch_id?: string;
   branches?: {
     name: string;
@@ -48,7 +48,7 @@ const Employees = () => {
     email: string;
     phone: string;
     password: string;
-    role: 'admin' | 'china_worker' | 'kz_worker' | '';
+    role: 'admin' | 'china_worker' | 'branch_worker' | '';
     branch_id: string;
   }>({
     name: '',
@@ -87,7 +87,7 @@ const Employees = () => {
 
       setEmployees((data || []).map(emp => ({
         ...emp,
-        role: emp.role as 'admin' | 'china_worker' | 'kz_worker'
+        role: emp.role as 'admin' | 'china_worker' | 'branch_worker'
       })));
     } catch (error) {
       console.error('Error fetching employees:', error);
@@ -130,7 +130,7 @@ const Employees = () => {
         email: newEmployee.email,
         phone: newEmployee.phone || undefined,
         password: newEmployee.password,
-        role: newEmployee.role as 'admin' | 'china_worker' | 'kz_worker',
+        role: newEmployee.role as 'admin' | 'china_worker' | 'branch_worker',
         branch_id: newEmployee.branch_id || undefined
       });
       
@@ -169,7 +169,7 @@ const Employees = () => {
         return 'bg-destructive text-destructive-foreground';
       case 'china_worker':
         return 'bg-primary text-primary-foreground';
-      case 'kz_worker':
+      case 'branch_worker':
         return 'bg-secondary text-secondary-foreground';
       default:
         return 'bg-muted text-muted-foreground';
@@ -182,8 +182,8 @@ const Employees = () => {
         return 'Администратор';
       case 'china_worker':
         return 'Сотрудник Китай';
-      case 'kz_worker':
-        return 'Сотрудник Казахстан';
+      case 'branch_worker':
+        return 'Сотрудник филиала';
       default:
         return role;
     }
@@ -288,14 +288,14 @@ const Employees = () => {
                   </Label>
                   <Select 
                     value={newEmployee.role} 
-                    onValueChange={(value: 'admin' | 'china_worker' | 'kz_worker') => setNewEmployee(prev => ({ ...prev, role: value }))}
+                    onValueChange={(value: 'admin' | 'china_worker' | 'branch_worker') => setNewEmployee(prev => ({ ...prev, role: value }))}
                   >
                     <SelectTrigger className="col-span-3">
                       <SelectValue placeholder="Выберите роль" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="china_worker">Сотрудник Китай</SelectItem>
-                      <SelectItem value="kz_worker">Сотрудник Казахстан</SelectItem>
+                      <SelectItem value="branch_worker">Сотрудник филиала</SelectItem>
                       <SelectItem value="admin">Администратор</SelectItem>
                     </SelectContent>
                   </Select>

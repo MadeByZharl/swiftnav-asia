@@ -8,7 +8,7 @@ interface Employee {
   name: string;
   email: string;
   phone?: string;
-  role: 'admin' | 'china_worker' | 'kz_worker';
+  role: 'admin' | 'china_worker' | 'branch_worker';
   branch_id?: string;
 }
 
@@ -54,7 +54,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       setEmployee({
         ...data,
-        role: data.role as 'admin' | 'china_worker' | 'kz_worker'
+        role: data.role as 'admin' | 'china_worker' | 'branch_worker'
       });
     } catch (error) {
       console.error('Error fetching employee:', error);
